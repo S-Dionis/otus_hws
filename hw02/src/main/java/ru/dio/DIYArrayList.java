@@ -53,10 +53,9 @@ public class DIYArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     private void increaseCapacity() {
         int currentCapacity = elements.length;
-        int minimumCapacity = 1 + currentCapacity;
-        int optimalCapacity = currentCapacity >> 1 + currentCapacity;
-
         if (currentCapacity > 0) {
+            int minimumCapacity = 1 + currentCapacity;
+            int optimalCapacity = currentCapacity >> 1 + currentCapacity;
             int capacity = Math.max(minimumCapacity, optimalCapacity);
             elements = Arrays.copyOf(elements, capacity);
         } else {
