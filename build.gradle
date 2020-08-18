@@ -10,7 +10,6 @@ buildscript {
 }
 
 plugins {
-    id 'java'
     id 'com.github.johnrengelman.shadow' version "$shadowPluginVersion" apply false
 }
 
@@ -18,4 +17,5 @@ allprojects {
     repositories {
         jcenter()
     }
+    apply plugin: 'java'
 }
