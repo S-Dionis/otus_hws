@@ -1,4 +1,5 @@
 ext {
     guavaVersion = "29.0-jre"
     shadowPluginVersion = "6.0.0"
+    junitVersion = "5.6.2"
 }
