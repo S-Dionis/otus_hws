@@ -69,7 +69,8 @@ public class TestRunner {
 
     private void runTests() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         for (Method testMethod : testMethods) {
-            boolean pass = runTest(testMethod, getInstanceOf(clazz));
+            Object instanceOf = getInstanceOf(clazz);
+            boolean pass = runTest(testMethod, instanceOf);
             String messageToPrint = className + "." + testMethod.getName() + "()";
             if (pass) {
                 printOnSuccess(messageToPrint);
