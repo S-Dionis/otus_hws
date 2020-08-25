@@ -1,0 +1,7 @@
+plugins {
+    //run task
+    id 'application'
+}
+application {
+    mainClassName="ru.dio.testframework.TestRunner"
+}

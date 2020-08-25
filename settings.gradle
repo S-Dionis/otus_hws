@@ -8,4 +8,4 @@
  */
 
 rootProject.name = 'otus_hws'
-include 'hw01-gradle', 'hw02'
+include 'hw01-gradle', 'hw02','hw03'
