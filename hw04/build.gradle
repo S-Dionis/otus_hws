@@ -1,0 +1,17 @@
+plugins {
+    id 'application'
+}
+
+def mem = '512'
+def gc = 'Parallel'
+
+application {
+    mainClassName = "ru.dio.Main"
+    applicationDefaultJvmArgs = ['-Xms' + mem + 'm',
+                                 '-Xmx' + mem + 'm',
+                                 '-Xlog:gc=debug:file=.logs\\' + gc + '-gc-%t.txt:uptime:filecount=5,filesize=10m',
+                                 '-XX:+HeapDumpOnOutOfMemoryError',
+                                 '-XX:HeapDumpPath=.logs\\dump',
+                                 '-XX:+Use' + gc + 'GC',
+                                 '-XX:MaxGCPauseMillis=10']
+}
