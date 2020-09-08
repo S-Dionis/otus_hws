@@ -1,0 +1,19 @@
+plugins {
+    id 'com.github.johnrengelman.shadow'
+}
+
+dependencies {
+    implementation "org.ow2.asm:asm-commons:$asmVersion"
+}
+
+task shadowJarAsm(type: Jar, dependsOn: shadowJar) {
+    archiveBaseName.set("asm")
+    manifest {
+        attributes 'Main-Class': 'ru.dio.asm.Main'
+        attributes 'Premain-Class': 'ru.dio.asm.Agent'
+    }
+
+    from zipTree(shadowJar.archiveFile)
+}
+
+tasks.build.dependsOn(tasks.shadowJarAsm)
