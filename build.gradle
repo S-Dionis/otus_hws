@@ -13,11 +13,12 @@ plugins {
     id 'com.github.johnrengelman.shadow' version "$shadowPluginVersion" apply false
 }
 
-subprojects {
-
+allprojects {
     repositories {
         jcenter()
     }
+}
 
+subprojects {
     apply plugin: 'java'
 }
