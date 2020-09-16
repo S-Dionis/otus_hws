@@ -2,7 +2,6 @@ package ru.dio.atm;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 import ru.dio.Banknote;
 import ru.dio.Nominal;
 import ru.dio.Payment;
@@ -10,7 +9,7 @@ import ru.dio.Payment;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class ATMTest {
+class CurrentATMTest {
 
     @DisplayName("Deposit on account")
     @Test
@@ -22,7 +21,7 @@ class ATMTest {
         Banknote banknote100 = new Banknote(nominal100);
         Banknote banknote500 = new Banknote(nominal500);
         int count = 1;
-        ATM atm = ATM.getBuilder()
+        ATM atm = CurrentATM.getBuilder()
                 .addCells(cell100, cell500)
                 .build();
 
@@ -49,7 +48,7 @@ class ATMTest {
         Cell cell = new Cell(nominal);
         cell.putBanknotes(new Banknote(Nominal.ONE_HUNDRED), count);
 
-        ATM atm = ATM.getBuilder().addCell(cell).build();
+        ATM atm = CurrentATM.getBuilder().addCell(cell).build();
         int actualBalance = atm.balance();
 
         assertEquals(expectedBalance, actualBalance);
@@ -61,13 +60,17 @@ class ATMTest {
         Nominal nominal100 = Nominal.ONE_HUNDRED;
         Cell cell100 = new Cell(nominal100);
         cell100.putBanknotes(new Banknote(Nominal.ONE_HUNDRED), 2);
-        ATM atm = ATM.getBuilder()
+        ATM atm = CurrentATM.getBuilder()
                 .addCells(cell100)
                 .build();
         int beforeBalance = atm.balance();
+
         assertThrows(ATMExceptions.WithdrawalException.class, () -> atm.withdrawal(6400));
-        assertThrows(ATMExceptions.WithdrawalException.class, () -> atm.withdrawal(150));
         int afterBalance = atm.balance();
+        assertEquals(beforeBalance, afterBalance);
+
+        assertThrows(ATMExceptions.WithdrawalException.class, () -> atm.withdrawal(150));
+        afterBalance = atm.balance();
         assertEquals(beforeBalance, afterBalance);
     }
 
@@ -95,7 +98,7 @@ class ATMTest {
         cell1000.putBanknotes(banknote1000, count);
         cell5000.putBanknotes(banknote5000, count);
 
-        ATM atm = ATM.getBuilder()
+       ATM atm = CurrentATM.getBuilder()
                 .addCells(cell100, cell500, cell1000, cell5000)
                 .build();
 

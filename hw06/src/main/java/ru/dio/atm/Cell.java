@@ -34,19 +34,18 @@ public class Cell implements Comparable<Cell> {
         }
     }
 
-    public List<Banknote> getBanknotes(int count) {
+    public List<Banknote> getBanknotes(int count) throws ATMExceptions.NotEnoughBanknotes {
+        if (amount < count) {
+            throw new ATMExceptions.NotEnoughBanknotes();
+        }
         amount -= count;
         return Collections.nCopies(count, new Banknote(cellNominal));
     }
 
-    public Banknote getBanknote() throws ATMExceptions.NotEnoughBanknotes {
-        if (amount > 0) {
-            Banknote banknote = new Banknote(cellNominal);
-            amount--;
-            return banknote;
-        } else {
-            throw new ATMExceptions.NotEnoughBanknotes();
-        }
+    public List<Banknote> getAllBanknotes() {
+        List<Banknote> banknotes = Collections.nCopies(amount, new Banknote(cellNominal));
+        amount = 0;
+        return banknotes;
     }
 
     public int getAmount() {
