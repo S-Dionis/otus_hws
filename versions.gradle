@@ -3,4 +3,7 @@ ext {
     shadowPluginVersion = "6.0.0"
     junitVersion = "5.6.2"
     asmVersion = "8.0.1"
+    assertjVersion = "3.11.1"
+    mockitoVersion = "2.1.0"
+    mockitoJunitVersion = "3.5.11"
 }
