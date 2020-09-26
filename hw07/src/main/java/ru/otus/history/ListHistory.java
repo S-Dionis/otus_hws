@@ -2,11 +2,12 @@ package ru.otus.history;
 
 import ru.otus.Message;
 
-import java.util.LinkedHashSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ListHistory implements MessageHistoryAdder {
 
-    private final LinkedHashSet<MessagePair> hashSet = new LinkedHashSet<>();
+    private final List<MessagePair> hashSet = new ArrayList<>();
 
     @Override
     public void save(Message oldMessage, Message newMessage) {
