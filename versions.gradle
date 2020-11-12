@@ -6,4 +6,7 @@ ext {
     assertjVersion = "3.11.1"
     mockitoVersion = "2.1.0"
     mockitoJunitVersion = "3.5.11"
+    gsonVersion = "2.8.6"
+    javaxJsonVersion = "1.1.4"
+    glassfishJavaxJson = "1.1.4"
 }
