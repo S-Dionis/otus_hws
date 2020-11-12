@@ -19,11 +19,6 @@ public class ArrayAdapter implements TypeAdapter {
 
         TypeAdapter adapter = AdapterFactories.getAdapter(componentType);
 
-        if (length == 0) {
-            //TODO what is here?
-            return null;
-        }
-
         for (int i = 0; i < length; i++) {
             Object arrayElement = Array.get(object, i);
             JsonValue jsonValue = adapter.toJson(arrayElement);

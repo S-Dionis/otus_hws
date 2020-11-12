@@ -62,6 +62,7 @@ class JsonTest {
 
     static class ArraysAndCollections {
         private int i[] = new int[] {1, 2, 3};
+        private int empty[] = new int[0];
         private List<String> strs = List.of("a", "b", "c");
     }
 
@@ -90,4 +91,5 @@ class JsonTest {
         }
 
     }
+
 }
