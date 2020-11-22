@@ -41,9 +41,12 @@ public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
         name = aClass.getSimpleName();
     }
 
-    @SuppressWarnings("unchecked")
     private void findAndSetConstructor(Class<T> aClass) {
-        constructor = (Constructor<T>) aClass.getDeclaredConstructors()[0];
+        try {
+            this.constructor = aClass.getConstructor();
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException("No default constructor for class: " + aClass.getName());
+        }
     }
 
     private void findAndSetIdField(Class<?> clazz) {
@@ -51,12 +54,12 @@ public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
                 .filter(field -> field.isAnnotationPresent(ID.class))
                 .findFirst();
 
-        id.ifPresentOrElse(
-                field -> this.id = field,
-                () -> {
-                    throw new RuntimeException("Id annotation does not found for class " + clazz.getName());
-                }
-        );
+        if (id.isPresent()) {
+            this.id = id.get();
+            return;
+        }
+
+        throw new RuntimeException("Id annotation does not found for class " + clazz.getName());
     }
 
     private void findAndSetAllFields(Class<?> clazz) {

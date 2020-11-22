@@ -1,13 +1,17 @@
 package ru.otus.jdbc.mapper;
 
+import org.h2.util.StringUtils;
 import ru.otus.jdbc.DbExecutor;
 import ru.otus.jdbc.sessionmanager.SessionManagerJdbc;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class JdbcMapperImpl<T> implements JdbcMapper<T> {
@@ -64,27 +68,36 @@ public class JdbcMapperImpl<T> implements JdbcMapper<T> {
     public Optional<T> findById(Object id, Class<T> clazz) {
         String sql = sqlMetaData.getSelectByIdSql();
         try {
-            return dbExecutor.executeSelect(sessionManager.getCurrentSession().getConnection(), sql, id, this::rsHandler);
+            return dbExecutor.executeSelect(sessionManager.getCurrentSession().getConnection(), sql, id, rs -> rsHandler(clazz, rs));
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage());
         }
     }
 
-    private T rsHandler(ResultSet rs) {
+    private T rsHandler(Class<T> clazz, ResultSet rs) {
+        final T instance;
         try {
             rs.next();
-
-            Object[] args = classMetaData.getAllFields().stream().map(field -> {
-                try {
-                    return rs.getObject(field.getName());
-                } catch (SQLException e) {
-                    throw new RuntimeException(e.getMessage());
-                }
-            }).toArray();
-
-            return classMetaData.getConstructor().newInstance(args);
-        } catch (SQLException | ReflectiveOperationException e) {
-            throw new RuntimeException(e.getMessage());
+            instance = classMetaData.getConstructor().newInstance();
+        } catch (ReflectiveOperationException | SQLException ex) {
+            throw new RuntimeException(ex.getMessage());
         }
+
+        fillInstanceWithValues(clazz, rs, instance);
+
+        return instance;
+    }
+
+    private void fillInstanceWithValues(Class<T> clazz, ResultSet rs, T instance) {
+        classMetaData.getAllFields().forEach(field -> {
+            try {
+                String name = field.getName();
+                String setter = "set" + name.substring(0, 1).toUpperCase() + name.substring(1);
+                Method method = clazz.getMethod(setter, field.getType());
+                method.invoke(instance, rs.getObject(field.getName()));
+            } catch (SQLException | ReflectiveOperationException e) {
+                throw new RuntimeException(e.getMessage());
+            }
+        });
     }
 }
