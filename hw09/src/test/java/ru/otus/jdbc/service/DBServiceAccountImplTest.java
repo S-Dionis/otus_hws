@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import ru.otus.core.dao.AccountDao;
 import ru.otus.core.model.Account;
 import ru.otus.core.service.DBServiceAccount;
-import ru.otus.core.sessionmanager.SessionManager;
 import ru.otus.h2.DataSourceH2;
 import ru.otus.h2.Migration;
 import ru.otus.jdbc.DbExecutor;
@@ -15,11 +14,9 @@ import ru.otus.jdbc.mapper.*;
 import ru.otus.jdbc.sessionmanager.SessionManagerJdbc;
 
 import javax.sql.DataSource;
-
 import java.math.BigDecimal;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DBServiceAccountImplTest {
 

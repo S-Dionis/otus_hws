@@ -1,0 +1,14 @@
+dependencies {
+    implementation "com.h2database:h2:$h2Version"
+    implementation "org.hibernate:hibernate-core:$hibernateVersion"
+    implementation "org.flywaydb:flyway-core:$flywayVersion"
+    implementation "ch.qos.logback:logback-classic:$logbackVersion"
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+}
+
+
+test {
+    useJUnitPlatform()
+}
