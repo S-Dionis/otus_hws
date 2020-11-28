@@ -11,4 +11,6 @@ ext {
     glassfishJavaxJson = "1.1.4"
     h2Version = "1.4.200"
     flywayVersion = "7.2.0"
+    hibernateVersion = "5.4.24.Final"
+    logbackVersion = "1.2.3"
 }
