@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import ru.otus.cachehw.HwCache;
 import ru.otus.cachehw.HwListener;
 import ru.otus.cachehw.SoftCache;
+import ru.otus.cachehw.WeakCache;
 import ru.otus.core.dao.UserDao;
 import ru.otus.core.model.AddressDataSet;
 import ru.otus.core.model.PhoneDataSet;
@@ -20,6 +21,7 @@ import ru.otus.jdbc.sessionmanager.SessionManagerHibernate;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,10 +29,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DBServiceUserImplTest {
 
-    DBServiceUser dbServiceUser;
-    DBServiceUser dbServiceUserCached;
-    Logger logger = LoggerFactory.getLogger(DBServiceUserImplTest.class);
-    HwCache<Long, User> cache = new SoftCache<>();
+    private DBServiceUser dbServiceUser;
+    private DBServiceUser dbServiceUserCached;
+    private final Logger logger = LoggerFactory.getLogger(DBServiceUserImplTest.class);
+    //private final HwCache<String, User> cache = new SoftCache<>();
+    private final HwCache<String, User> cache = new WeakCache<>();
 
     @BeforeEach
     void init() throws SQLException {
@@ -63,29 +66,21 @@ class DBServiceUserImplTest {
 
     @Test
     void testThatGetSavedUserFromCacheIsFasterThenFromDB() {
-        long dbTime = 0;
-        long cacheTime = 0;
-        {
-            User user = createUser();
-            long id = dbServiceUser.saveUser(user);
-            long start = System.currentTimeMillis();
-            var saved = dbServiceUser.getUser(id).get();
-            long end = System.currentTimeMillis();
-
-            dbTime = end - start;
-        }
-
-        {
-            User user = createUser();
-            long id = dbServiceUserCached.saveUser(user);
-            long start = System.currentTimeMillis();
-            var saved = dbServiceUserCached.getUser(id).get();
-            long end = System.currentTimeMillis();
-
-            cacheTime = end - start;
-        }
+        long dbTime = getOperationTime(dbServiceUser);
+        long cacheTime = getOperationTime(dbServiceUserCached);
 
         assertTrue(cacheTime < dbTime);
+    }
+
+    private long getOperationTime(DBServiceUser dbServiceUser) {
+        long start = System.currentTimeMillis();
+
+        User user = createUser();
+        long id = dbServiceUserCached.saveUser(user);
+        var saved = dbServiceUserCached.getUser(id).get();
+
+        long end = System.currentTimeMillis();
+        return end - start;
     }
 
     @Test
@@ -97,9 +92,9 @@ class DBServiceUserImplTest {
 
         Variable variable = new Variable();
 
-        HwListener<Long, User> listener = new HwListener<Long, User>() {
+        HwListener<String, User> listener = new HwListener<String, User>() {
             @Override
-            public void notify(Long key, User value, String action) {
+            public void notify(String key, User value, String action) {
                 variable.a++;
             }
         };
@@ -112,9 +107,8 @@ class DBServiceUserImplTest {
         listener = null;
         System.gc();
         Thread.sleep(199);
-
         dbServiceUserCached.saveUser(createUser());
-        //assert that listener was call only 2 times
+        //assert that listener was called only 2 times
         assertEquals(variable.a, 2);
     }
 
@@ -129,7 +123,7 @@ class DBServiceUserImplTest {
         user.setAddress(address);
         return user;
     }
-
+/*
     private User createRandomUser(long id) {
         Random random = new Random();
         User user = new User();
@@ -150,5 +144,5 @@ class DBServiceUserImplTest {
         user.setAddress(address);
         return user;
     }
-
+*/
 }

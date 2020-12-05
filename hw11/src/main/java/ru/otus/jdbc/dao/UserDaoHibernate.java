@@ -14,8 +14,7 @@ import java.util.Optional;
 public class UserDaoHibernate implements UserDao {
 
     private final Logger logger = LoggerFactory.getLogger(UserDaoHibernate.class);
-
-    SessionManagerHibernate sessionManager;
+    private final SessionManagerHibernate sessionManager;
 
     public UserDaoHibernate(SessionManagerHibernate sessionManager) {
         this.sessionManager = sessionManager;

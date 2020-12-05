@@ -3,8 +3,8 @@ ext {
     shadowPluginVersion = "6.0.0"
     junitVersion = "5.6.2"
     asmVersion = "8.0.1"
-    assertjVersion = "3.11.1"
-    mockitoVersion = "2.1.0"
+    assertjVersion = "3.18.1"
+    mockitoVersion = "3.6.28"
     mockitoJunitVersion = "3.5.11"
     gsonVersion = "2.8.6"
     javaxJsonVersion = "1.1.4"
@@ -13,4 +13,5 @@ ext {
     flywayVersion = "7.2.0"
     hibernateVersion = "5.4.24.Final"
     logbackVersion = "1.2.3"
+    jettyVersion = "9.4.35.v20201120"
 }

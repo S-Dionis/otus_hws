@@ -7,11 +7,11 @@ import java.lang.ref.SoftReference;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class SoftCache<K, V> implements HwCache<K, V> {
+public class WeakCache<K, V> implements HwCache<K, V>  {
 
     private final Logger logger = LoggerFactory.getLogger(SoftCache.class);
 
-    private final Map<K, SoftReference<V>> softCache = new HashMap<>();
+    private final Map<K, V> cache = new WeakHashMap<>();
     private final Set<HwListener<K, V>> listeners = Collections.newSetFromMap(new WeakHashMap<>());
 
     private static final long TIME_BETWEEN_CLEAN = 5_000;
@@ -30,8 +30,8 @@ public class SoftCache<K, V> implements HwCache<K, V> {
         final V aValue = Objects.requireNonNull(value);
 
         //NOTE: Currently update is not supported by UserDao so hibernate will try to insert DETACHED object
-        final String action = softCache.containsKey(key) ? ACTION_UPDATE : ACTION_PUT;
-        softCache.put(aKey, new SoftReference<>(aValue));
+        final String action = cache.containsKey(key) ? ACTION_UPDATE : ACTION_PUT;
+        cache.put(aKey, aValue);
 
         notifyListeners(l -> l.notify(aKey, aValue, action));
     }
@@ -41,7 +41,7 @@ public class SoftCache<K, V> implements HwCache<K, V> {
         deleteNullValues();
 
         final K aKey = Objects.requireNonNull(key);
-        V aValue = softCache.remove(key).get();
+        V aValue = cache.remove(key);
         notifyListeners(l -> l.notify(aKey, aValue, ACTION_REMOVE));
     }
 
@@ -50,13 +50,8 @@ public class SoftCache<K, V> implements HwCache<K, V> {
         deleteNullValues();
 
         final K aKey = Objects.requireNonNull(key);
-        SoftReference<V> vSoftReference = softCache.get(key);
+        V value = cache.get(key);
 
-        if (vSoftReference == null) {
-            return null;
-        }
-
-        V value = vSoftReference.get();
         if (value != null) {
             notifyListeners(l -> l.notify(aKey, value, ACTION_GET));
         }
@@ -88,7 +83,8 @@ public class SoftCache<K, V> implements HwCache<K, V> {
         long currentTimeMillis = System.currentTimeMillis();
         if (currentTimeMillis > lastTimeCleaned + TIME_BETWEEN_CLEAN) {
             lastTimeCleaned = currentTimeMillis;
-            softCache.values().removeIf(value -> value.get() == null);
+            cache.values().removeIf(Objects::isNull);
         }
     }
+
 }

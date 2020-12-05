@@ -9,28 +9,25 @@ import java.util.Optional;
 public class DBServiceUserImplProxy implements DBServiceUser {
 
     DBServiceUser serviceUser;
-    public HwCache<Long, User> cache;
+    public HwCache<String, User> cache;
 
-    public DBServiceUserImplProxy(DBServiceUser serviceUser, HwCache<Long, User> cache) {
+    public DBServiceUserImplProxy(DBServiceUser serviceUser, HwCache<String, User> cache) {
         this.serviceUser = serviceUser;
         this.cache = cache;
     }
 
     @Override
     public long saveUser(User user) {
-        long id = serviceUser.saveUser(user);
-        cache.put(id, new User(user));
+        Long id = serviceUser.saveUser(user);
+        cache.put(id.toString(), new User(user));
         return id;
     }
 
     @Override
     public Optional<User> getUser(long id) {
-        User value = cache.get(id);
-        if (value == null) {
-            return serviceUser.getUser(id);
-        } else {
-            return Optional.of(value);
-        }
-
+        return Optional
+                .ofNullable(cache.get(Long.toString(id)))
+                .or(() -> serviceUser.getUser(id));
     }
+
 }
