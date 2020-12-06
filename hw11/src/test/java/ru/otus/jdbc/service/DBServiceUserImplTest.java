@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.cachehw.HwCache;
 import ru.otus.cachehw.HwListener;
-import ru.otus.cachehw.SoftCache;
 import ru.otus.cachehw.WeakCache;
 import ru.otus.core.dao.UserDao;
 import ru.otus.core.model.AddressDataSet;
@@ -21,8 +20,6 @@ import ru.otus.jdbc.sessionmanager.SessionManagerHibernate;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -32,7 +29,6 @@ class DBServiceUserImplTest {
     private DBServiceUser dbServiceUser;
     private DBServiceUser dbServiceUserCached;
     private final Logger logger = LoggerFactory.getLogger(DBServiceUserImplTest.class);
-    //private final HwCache<String, User> cache = new SoftCache<>();
     private final HwCache<String, User> cache = new WeakCache<>();
 
     @BeforeEach
@@ -57,11 +53,6 @@ class DBServiceUserImplTest {
 
         dbServiceUser = new DBServiceUserImpl(userDao);
         dbServiceUserCached = new DBServiceUserImplProxy(dbServiceUser, cache);
-
-//        jdbc:h2:tcp://192.168.0.4:52675/mem:testDB
-//        Server tcpServer = Server.createTcpServer("-tcpPort", "52675");
-//        tcpServer.start();
-//        System.out.println(tcpServer.getURL());
     }
 
     @Test
@@ -76,8 +67,8 @@ class DBServiceUserImplTest {
         long start = System.currentTimeMillis();
 
         User user = createUser();
-        long id = dbServiceUserCached.saveUser(user);
-        var saved = dbServiceUserCached.getUser(id).get();
+        long id = dbServiceUser.saveUser(user);
+        var saved = dbServiceUser.getUser(id).get();
 
         long end = System.currentTimeMillis();
         return end - start;
@@ -123,26 +114,5 @@ class DBServiceUserImplTest {
         user.setAddress(address);
         return user;
     }
-/*
-    private User createRandomUser(long id) {
-        Random random = new Random();
-        User user = new User();
 
-        List<PhoneDataSet> pds = List.of(
-                new PhoneDataSet(id,
-                        "" + random.nextInt(Integer.MAX_VALUE),
-                        user
-                )
-        );
-        AddressDataSet address = new AddressDataSet(id, "" + random.nextInt(Integer.MAX_VALUE), user);
-
-        user.setId(id);
-        user.setAge(random.nextInt(Integer.MAX_VALUE));
-        user.setName(" " + random.nextInt(Integer.MAX_VALUE));
-
-        user.setPhones(pds);
-        user.setAddress(address);
-        return user;
-    }
-*/
 }

@@ -8,8 +8,8 @@ import java.util.Optional;
 
 public class DBServiceUserImplProxy implements DBServiceUser {
 
-    DBServiceUser serviceUser;
-    public HwCache<String, User> cache;
+    private final DBServiceUser serviceUser;
+    private final HwCache<String, User> cache;
 
     public DBServiceUserImplProxy(DBServiceUser serviceUser, HwCache<String, User> cache) {
         this.serviceUser = serviceUser;
