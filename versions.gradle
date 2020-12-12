@@ -14,4 +14,5 @@ ext {
     hibernateVersion = "5.4.24.Final"
     logbackVersion = "1.2.3"
     jettyVersion = "9.4.35.v20201120"
+    reflectionsVersion = "0.9.12"
 }
