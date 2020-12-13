@@ -13,8 +13,5 @@ public interface UserDao {
 
     List<User> findAllUsers();
 
-    //void updateUser(User user);
-    //void insertOrUpdate(User user);
-
     SessionManager getSessionManager();
 }

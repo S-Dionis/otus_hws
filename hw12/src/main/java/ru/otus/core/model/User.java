@@ -38,21 +38,6 @@ public class User {
         this.address = address;
     }
 
-    public User(User user) {
-        this.id = user.getId();
-        this.name = user.getName();
-        this.age = user.getAge();
-
-        AddressDataSet address = user.getAddress();
-        this.address = new AddressDataSet(address.getId(), address.getStreet(), this);
-
-        List<PhoneDataSet> phones = user.getPhones();
-        this.phones = new ArrayList<>();
-        for(PhoneDataSet phone: phones) {
-            this.phones.add(new PhoneDataSet(phone.getId(), phone.getNumber(), this));
-        }
-    }
-
     public Long getId() {
         return id;
     }
