@@ -1,0 +1,61 @@
+plugins {
+    id 'war'
+}
+
+sourceCompatibility = JavaVersion.VERSION_13
+targetCompatibility = JavaVersion.VERSION_13
+
+dependencies {
+    implementation "com.h2database:h2:$h2Version"
+    implementation "org.hibernate:hibernate-core:$hibernateVersion"
+    implementation "org.flywaydb:flyway-core:$flywayVersion"
+
+    implementation("ch.qos.logback:logback-classic:$logbackVersion")
+    implementation("com.google.code.gson:gson:$gsonVersion")
+
+    implementation("org.thymeleaf:thymeleaf:$thymeleafVersion")
+    implementation("org.thymeleaf:thymeleaf-spring5:$thymeleafVersion")
+    implementation("org.springframework:spring-context:$springVersion")
+    implementation("org.springframework:spring-webmvc:$springVersion")
+    implementation("org.springframework:spring-web:$springVersion")
+    providedCompile("javax.servlet:javax.servlet-api:$javaxServletApiVersion")
+
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
+    testImplementation("org.assertj:assertj-core:$assertjVersion")
+    testImplementation("org.mockito:mockito-junit-jupiter:$mockitoJunitVersion")
+    testCompile ("org.springframework:spring-test:$springVersion")
+    testCompile ("org.hamcrest:hamcrest-core:$hamcrestVersion")
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+compileJava.options.encoding = 'UTF-8'
+
+tasks.withType(JavaCompile) {
+    options.with {
+        encoding = 'UTF-8'
+    }
+}
+
+war {
+    archiveName 'hw14.war'
+    from 'src/main/resources'
+
+}
+
+task toServer () {
+    doLast {
+        copy {
+            from war.archiveFile
+            into "${System.env.CATALINA_HOME}\\webapps"
+        }
+    }
+}
+
+build.dependsOn toServer
