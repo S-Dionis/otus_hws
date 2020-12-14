@@ -15,4 +15,8 @@ ext {
     logbackVersion = "1.2.3"
     jettyVersion = "9.4.35.v20201120"
     freeMarkerVersion = "2.3.30"
+    springVersion = "5.3.2"
+    javaxServletApiVersion = "4.0.1"
+    thymeleafVersion = "3.0.11.RELEASE"
+    hamcrestVersion = "2.2"
 }
