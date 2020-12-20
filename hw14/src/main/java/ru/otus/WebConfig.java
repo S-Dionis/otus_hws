@@ -29,7 +29,6 @@ import ru.otus.sessionmanager.SessionManagerHibernate;
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
 
-    private static final String URL = "jdbc:h2:mem:testDB;DB_CLOSE_DELAY=-1";
     private final ApplicationContext applicationContext;
 
     public WebConfig(ApplicationContext applicationContext) {
@@ -64,42 +63,6 @@ public class WebConfig implements WebMvcConfigurer {
         return viewResolver;
     }
 
-    @Bean
-    public org.hibernate.cfg.Configuration hibernateConfiguration() {
-        return new org.hibernate.cfg.Configuration()
-                .setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect")
-                .setProperty("hibernate.connection.driver_class", "org.h2.Driver")
-                .setProperty("hibernate.connection.url", URL)
-                .setProperty("hibernate.show_sql", "true")
-                .setProperty("hibernate.hbm2ddl.auto", "create")
-                .setProperty("hibernate.generate_statistics", "true");
-    }
-
-    @Bean
-    public StandardServiceRegistry serviceRegistry(org.hibernate.cfg.Configuration hibernateConfiguration) {
-        return new StandardServiceRegistryBuilder()
-                .applySettings(hibernateConfiguration.getProperties()).build();
-    }
-
-    @Bean
-    public Metadata sessionFactory(StandardServiceRegistry serviceRegistry) {
-        return new MetadataSources(serviceRegistry)
-                .addAnnotatedClass(User.class)
-                .addAnnotatedClass(PhoneDataSet.class)
-                .addAnnotatedClass(AddressDataSet.class)
-                .getMetadataBuilder()
-                .build();
-    }
-
-    @Bean
-    public SessionManagerHibernate sessionManagerHibernate(Metadata metadata) {
-        return new SessionManagerHibernate(metadata.getSessionFactoryBuilder().build());
-    }
-
-    @Bean
-    public UserDao userDao(SessionManagerHibernate sessionManagerHibernate) {
-        return new UserDaoHibernate(sessionManagerHibernate);
-    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

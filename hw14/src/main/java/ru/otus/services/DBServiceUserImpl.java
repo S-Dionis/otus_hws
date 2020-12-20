@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class DBServiceUser implements ru.otus.core.service.DBServiceUser {
+public class DBServiceUserImpl implements ru.otus.core.service.DBServiceUser {
 
     private final UserDao userDao;
-    private static final Logger logger = LoggerFactory.getLogger(DBServiceUser.class);
+    private static final Logger logger = LoggerFactory.getLogger(DBServiceUserImpl.class);
 
-    public DBServiceUser(UserDao userDao) {
+    public DBServiceUserImpl(UserDao userDao) {
         this.userDao = userDao;
     }
 
