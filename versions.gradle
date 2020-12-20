@@ -15,4 +15,5 @@ ext {
     logbackVersion = "1.2.3"
     jettyVersion = "9.4.35.v20201120"
     reflectionsVersion = "0.9.12"
+    freeMarkerVersion = "2.3.30"
 }
