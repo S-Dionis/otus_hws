@@ -1,0 +1,77 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin's page</title>
+
+    <script>
+        function insertUser() {
+
+            var nameTextBox = document.getElementById('name');
+            var ageTextBox = document.getElementById('age');
+
+            var nameValue = nameTextBox.value;
+            var ageValue = parseInt(ageTextBox.value, 10);
+
+            if (nameValue == "") {
+                alert("name can't be empty");
+                return;
+            }
+
+            if (ageValue == 0 || isNaN(ageValue)) {
+                alert("age must be greater than 0");
+                return;
+            }
+
+            let user = {
+                name: nameValue,
+                age: ageValue
+            };
+
+            fetch('api/user/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(user)
+            });
+
+        }
+
+        function getUsers() {
+            fetch('api/user/')
+            .then(response => response.json())
+            .then(users => {
+                var tableUsers = document.getElementById("users");
+                tableUsers.innerHTML = "";
+                for (let i = 0; i< users.length; i++) {
+                    var tableUsers = document.getElementById("users");                                                
+                    tableUsers.innerHTML = tableUsers.innerHTML + "<tr><td>" + users[i].name + "</td><td>" + users[i].age + "</td></tr>";
+                    console.log(users[i].name);
+                }
+            })
+        }
+
+    </script>
+</head>
+
+<body onload="getUsers()">
+<h4>add user</h4>
+
+user name:
+<input type="text" id="name" value="Mr. Cat">
+
+user age:
+<input type="number" id="age" value="4">
+
+<button onclick="insertUser()">Insert new User</button>
+
+<br>
+
+<button onclick="getUsers()">Get users</button>
+
+<br>
+
+<table id="users">
+
+</table>
+</body>
+</html>
