@@ -1,10 +1,5 @@
 package ru.otus;
 
-import org.hibernate.SessionFactory;
-import org.hibernate.boot.Metadata;
-import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistry;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -17,12 +12,6 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
-import ru.otus.core.dao.UserDao;
-import ru.otus.core.model.AddressDataSet;
-import ru.otus.core.model.PhoneDataSet;
-import ru.otus.core.model.User;
-import ru.otus.dao.UserDaoHibernate;
-import ru.otus.sessionmanager.SessionManagerHibernate;
 
 @Configuration
 @ComponentScan
@@ -62,7 +51,6 @@ public class WebConfig implements WebMvcConfigurer {
         viewResolver.setCharacterEncoding("UTF-8");
         return viewResolver;
     }
-
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
