@@ -1,0 +1,38 @@
+plugins {
+	id 'org.springframework.boot' version "$springBootVersion"
+	id 'io.spring.dependency-management' version "$springDependencyManagementVersion"
+}
+
+group = 'ru.dio'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation project(":hw16:MessageSystem")
+
+	//implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	implementation "com.h2database:h2:$h2Version"
+	implementation "org.hibernate:hibernate-core:$hibernateVersion"
+
+	implementation "org.webjars:webjars-locator-core"
+	implementation "org.webjars:sockjs-client:$sockjsVersion"
+	implementation "org.webjars:stomp-websocket:$stompVersion"
+	implementation "org.webjars:bootstrap:$bootstrapVersion"
+}
+
+test {
+	useJUnitPlatform()
+}
+
+compileJava.options.encoding = 'UTF-8'
+
+tasks.withType(JavaCompile) {
+	options.with {
+		encoding = 'UTF-8'
+	}
+}
